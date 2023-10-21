@@ -19,10 +19,15 @@ class Mokinys {
 	string vardas;
 	string pavarde;
 	vector<int> pazymiai;
+	int galutinis_pazimys;
 	int egzam_result;
+	int pazimiu_sk;
 
 public:
 	Mokinys();
+	~Mokinys();
+	Mokinys(string name, string surname, vector<int> grades, int result);
+    Mokinys& operator=(const Mokinys &mokinys);
 	float pazymio_vidurkis();
 	float pazymio_medianas();
 	void print_vidurkis();
@@ -30,23 +35,21 @@ public:
 	void print_ND();
 
 	//seteriai
+	void SetPaz_sk(int skaicius);
 	void SetVardas(string name);
 	void SetPavarde(string name);
 	void SetPazymiai(vector<int>& vec);
 	void SetEgzaminas(int skaicius);
 	//geteriai
-	//destruktorius
-	~Mokinys() {
-		vardas.clear();
-		pavarde.clear();
-		pazymiai.clear();
-
-
+	int Get_pazSk() {
+		return pazimiu_sk;
 	}
+	//destruktorius
+
 
 
 };
-//funkcijos
+
 void asmens_ivestis(Mokinys& student);
 void pazymiai(Mokinys& student);
 void all_print(vector<Mokinys>& group);
