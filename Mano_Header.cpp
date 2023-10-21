@@ -81,7 +81,7 @@ void Mokinys::print_ND() {
 	cout << std::setw(12)<<vardas<< std::setw(12)<< pavarde <<std::setw(12);
 	for (auto& skaicius : pazymiai) cout <<std::setw(12)<< skaicius;
 	cout <<std::setw(12)<<egzam_result<< endl;
-
+	cout << endl;
 }
 
 //-----------------------------------------------------------------
@@ -209,9 +209,9 @@ void all_print(vector<Mokinys>& group) {
 	}
 	else {
 		
-		label_ND(group[0].Get_pazSk());
+		//label_ND(group[0].Get_pazSk());
 		
-		for (auto& duom : group) duom.print_ND();
+		for (auto& duom : group) label_ND(duom.Get_pazSk()), duom.print_ND();
 
 
 
