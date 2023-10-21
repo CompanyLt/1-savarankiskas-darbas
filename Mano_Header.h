@@ -25,7 +25,6 @@ class Mokinys {
 
 public:
 	Mokinys();
-	~Mokinys();
 	Mokinys(string name, string surname, vector<int> grades, int result);
     Mokinys& operator=(const Mokinys &mokinys);
 	float pazymio_vidurkis();
@@ -45,7 +44,7 @@ public:
 		return pazimiu_sk;
 	}
 	//destruktorius
-
+	~Mokinys();
 
 
 };
