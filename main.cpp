@@ -6,10 +6,12 @@ int main()
 {
 	vector<Mokinys> Grupe;
 	Mokinys mokinys;
-	
+	vector<int> skaiciai;
+
 	for (int i = 0; i < 1; i++) {
 		
 		asmens_ivestis(mokinys);
+
 		pazymiai(mokinys);
 
 		Grupe.push_back(mokinys);
