@@ -6,9 +6,9 @@ int main()
 {
 	vector<Mokinys> Grupe;
 	Mokinys mokinys;
-	vector<int> skaiciai; 
+	vector<int> skaiciai;
 
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < 2; i++) {
 		
 		asmens_ivestis(mokinys);
 
