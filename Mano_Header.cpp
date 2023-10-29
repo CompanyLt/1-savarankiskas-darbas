@@ -131,6 +131,77 @@ void asmens_ivestis(Mokinys& student) {
 
 }
 
+void failo_skaitymas(vector<Mokinys>& group, Mokinys& student) {
+	std::ifstream skaitymas("kursiokai.txt");
+	int index = 0;
+	int skaiciavimas = -1;
+	int dis = 2;
+	int skaic;
+	std::string zodis="";
+	vector <int> temp_pazymiai;
+	
+	if (skaitymas.is_open()) {
+	
+		//nuskaito pirma eilute iki egz. kad suzinoti kiek namu darbu
+		while (skaitymas >> zodis  ) {
+			//cout << zodis << endl;
+			skaiciavimas += 1;
+			if (zodis == "Egz.") { break; }
+	
+
+		}
+		
+	
+		
+
+		cout << "Faile yra " << skaiciavimas <<"namu darbu"<<endl;
+
+
+		cout << "---------------------------" << endl;
+		//cia realizuotas duomenu perdavimas i kintamuosius----------------------------------
+		while (!skaitymas.eof()) {
+				if (index <1) { skaitymas >> zodis, student.SetPavarde(zodis), index += 1; }
+			if (index >=1 && index<2) { skaitymas >> zodis, student.SetVardas(zodis), index += 1; }
+	
+			if (index == 2 && dis!=skaiciavimas) { skaitymas >> skaic, temp_pazymiai.push_back(skaic), dis += 1; }
+			if (dis == skaiciavimas) { 
+				skaitymas >> skaic,
+					student.SetEgzaminas(skaic),
+					student.SetPazymiai(temp_pazymiai),
+					student.SetPaz_sk(skaiciavimas-2),
+					group.push_back(student),
+					student.~Mokinys(),
+					temp_pazymiai.clear();
+					index = 0,
+					dis = 2; }
+
+		}
+		
+	
+	
+		/*	skaitymas >> zodis;
+		cout << zodis << endl;*/
+
+		skaitymas.close();
+
+
+
+	
+	}
+	else {
+		cout << "Failo negalima atidaryti arba jo nera" << endl;
+		
+	
+		
+
+
+	}
+
+
+
+
+}
+
 void pazymiai(Mokinys& student) {
 	int temp;
 	vector<int> temp_pazymiai;
@@ -153,6 +224,8 @@ void pazymiai(Mokinys& student) {
 	student.SetPazymiai(temp_pazymiai);
 	cout << endl;
 }
+
+
 //spausdina pagrindini vidurkio-med uzrasa LENTELE---------------------
 void label_vidurkio(vector<Mokinys>& group) {
 	int choice;
@@ -182,6 +255,7 @@ void label_vidurkio(vector<Mokinys>& group) {
 //------------------------------------------------------------------------
 //visu namu darbu lenteles spausdinimas
 void label_ND(int group_size) {
+	
 	cout << std::setw(12) << "Pavarde" << std::setw(12) << "Vardas";
 	for (int i = 0; i < group_size; i++) {
 		cout << std::setw(11) << "ND" << i + 1;
@@ -192,8 +266,11 @@ void label_ND(int group_size) {
 
 }
 //----------------------------------------
+// 
+//
 //cia pagrindine spausdinimo funkcija kuri marsrutizuoja konkrecia uzklausa
 void all_print(vector<Mokinys>& group) {
+	
 	int pasirinkimas;
 	cout << "Vidurkis[ 1.] , visi namu darbai[ 2.]" << endl;
 	cout << "Ka isvesti: ";
@@ -208,9 +285,7 @@ void all_print(vector<Mokinys>& group) {
 
 	}
 	else {
-		
-		//label_ND(group[0].Get_pazSk());
-		
+				
 		for (auto& duom : group) label_ND(duom.Get_pazSk()), duom.print_ND();
 
 
