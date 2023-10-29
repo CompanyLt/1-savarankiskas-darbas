@@ -6,6 +6,7 @@
 #include <numeric>
 #include <iomanip>
 #include <algorithm>
+#include <fstream>
 
 using std::vector;
 using std::cout;
@@ -33,6 +34,15 @@ public:
 	void print_medianas();
 	void print_ND();
 
+
+
+
+
+
+
+
+
+
 	//seteriai
 	void SetPaz_sk(int skaicius);
 	void SetVardas(string name);
@@ -49,6 +59,8 @@ public:
 
 };
 
+
+void failo_skaitymas(vector<Mokinys>& group,Mokinys& student);
 void asmens_ivestis(Mokinys& student);
 void pazymiai(Mokinys& student);
 void all_print(vector<Mokinys>& group);
