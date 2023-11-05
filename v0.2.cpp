@@ -88,6 +88,10 @@ void Saraso_Rikiavimas(vector<Mokinys>& group) {
 
 	//}
 	auto start = std::chrono::high_resolution_clock::now();
+	for (auto& list : group) {
+		list.pazymio_vidurkis(true);
+	}
+
 	std::sort(group.begin(), group.end(), lyginimas_pagal_vidurki);
 	auto end = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> diff = end - start;
@@ -103,6 +107,7 @@ bool lyginimas_pagal_varda( Mokinys& mokinys1, Mokinys& mokinys2) {
 }
 
 bool lyginimas_pagal_vidurki(Mokinys& mokinys1, Mokinys& mokinys2) {
+	
 
 	return mokinys1.Get_Vidurkis() > mokinys2.Get_Vidurkis();
 
@@ -111,17 +116,23 @@ bool lyginimas_pagal_vidurki(Mokinys& mokinys1, Mokinys& mokinys2) {
 
 
 
+
+
+
+
+
 void Saraso_Skirstymas(vector<Mokinys>& group, vector<Mokinys>& good_students, vector<Mokinys>& bad_students) {
 	auto start = std::chrono::high_resolution_clock::now();
-	for (auto& vec : group) {
+	for (auto it = group.begin(); it != group.end();) {
 		//true su vidurkio priskyrimu jei false tai nepriskiria
-		if (vec.pazymio_vidurkis(true) >= 5) {
-			good_students.push_back(vec);
-
+		if (it->pazymio_vidurkis(true) >= 5) {
+			good_students.push_back(*it);
+			it = group.erase(it);
 
 		}
 		else {
-			bad_students.push_back(vec);
+			bad_students.push_back(*it);
+			it = group.erase(it);
 		}
 
 
@@ -168,17 +179,13 @@ void Saraso_Sukurimas(vector<Mokinys>& List, string file_name) {
 
 void Pagrindiniai_veiksmai(vector<Mokinys>& group, vector<Mokinys>& good_students, vector<Mokinys>& bad_students, int pasirinkimas) {
 	//Sarasu rikiavimas
-	if (pasirinkimas == 1 && group[0].Get_Vidurkis() == NULL) {
-		cout << "Pirma reikai  suskirstyti." << endl;
-		cout << endl;
-		return;
-	}
-
-
+	
 	if (pasirinkimas == 1) {
 		cout << "Kuri sarasa rikiuosite?" << endl;
 		cout << "Visa [ 1 ], Geri mokiniai [ 2 ], blogi mokiniai [ 3 ];" << endl;
 		cin >> pasirinkimas;
+
+
 
 		switch (pasirinkimas)
 		{
@@ -194,6 +201,14 @@ void Pagrindiniai_veiksmai(vector<Mokinys>& group, vector<Mokinys>& good_student
 		default:
 			break;
 		}
+
+
+
+
+
+
+
+
 
 
 
@@ -254,9 +269,136 @@ string stringas;
 
 
 
+
+
+
+
+
+
+
+		
+
+
+
+
+
+
+
 	}
 
 
 
 
+
+
+
+
 }
+
+
+//void Pagrindiniai_veiksmai_new(Konteineriai& container, int pasirinkimas) {
+//	//Sarasu rikiavimas
+//
+//	if (pasirinkimas == 1) {
+//		cout << "Kuri sarasa rikiuosite?" << endl;
+//		cout << "Visa [ 1 ], Geri mokiniai [ 2 ], blogi mokiniai [ 3 ];" << endl;
+//		cin >> pasirinkimas;
+//
+//		switch (pasirinkimas)
+//		{
+//		case 1:
+//			container.Saraso_Rikiavimas_marsrutizavimas(1);
+//			break;
+//		case 2:
+//			container.Saraso_Rikiavimas_marsrutizavimas(2);
+//			break;
+//		case 3:
+//			container.Saraso_Rikiavimas_marsrutizavimas(3);
+//			break;
+//		default:
+//			break;
+//		}
+//
+//	}
+//	//sarasu skirstymas
+//	else if (pasirinkimas == 2) {
+//		//perduodam grupe ir 2 sarasus i kuriuos skirstome grupe
+//		container.Saraso_skirstymo_marsrutizavimas();
+//
+//
+//	}
+//	else if (pasirinkimas == 3) {
+//		cout << "Kuri sarasa Spausdinam i konsole?:" << endl;
+//		cout << "Visas sarasas [ 1 ] | geri mokyniai [ 2 ] | blogi mokyniai [ 3 ]" << endl;
+//		cin >> pasirinkimas;
+//		switch (pasirinkimas)
+//		{
+//		case 1:
+//			container.all_printas_marsrutizavimas(1);
+//			break;
+//		case 2:
+//			container.all_printas_marsrutizavimas(2);
+//			break;
+//		case 3:
+//			container.all_printas_marsrutizavimas(3);
+//			break;
+//		default:
+//			break;
+//		}
+//	}
+//	else if (pasirinkimas == 4) {
+//		string stringas;
+//		cout << "rinkites kuri isvedam i txt:" << endl;
+//		cout << "Visas sarasas [ 1 ] | geri mokyniai [ 2 ] | blogi mokyniai [ 3 ]" << endl;
+//		cin >> pasirinkimas;
+//		cout << "Iveskite ataskaitos pavadinima" << endl;
+//		cin >> stringas;
+//
+//		switch (pasirinkimas)
+//		{
+//		case 1:
+//
+//			
+//		case 2:
+//		
+//			break;
+//		case 3:
+//		
+//			break;
+//		default:
+//			break;
+//		}
+//
+//
+//
+//		system("pause");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//	}
+//
+//
+//
+//
+//
+//
+//
+//
+//}
