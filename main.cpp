@@ -1,4 +1,4 @@
-// Savarankiskas darbas v1.0.cpp 
+// Savarankiskas darbas v1.0 final.cpp 
 //
 # include "Mano_Header.h"
 #include <list>
@@ -9,8 +9,6 @@ int main()
 {
 
 	srand(time(0));
-	Konteineriai konteineris;
-
 	vector<Mokinys> Grupe;
 	Mokinys mokinys;
 	vector<int> skaiciai;
