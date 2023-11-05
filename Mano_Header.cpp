@@ -406,7 +406,10 @@ void all_print(vector<Mokinys>& group) {
 
 }
 void all_print_v2(vector<Mokinys>& group) {
-
+if (group.size()==0) {
+		cout << "sarasas tuscias" << endl;
+		return;
+	}
 	int pasirinkimas;
 	cout << "Vidurkis[ 1.] , visi namu darbai[ 2.]" << endl;
 	cout << "Ka isvesti: ";
