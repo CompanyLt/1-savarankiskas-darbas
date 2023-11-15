@@ -1,125 +1,100 @@
-// Savarankiskas darbas v1.0 final.cpp 
+// Savarankiskas darbas v1.1.cpp 
 //
 # include "Mano_Header.h"
 #include <list>
 
 //namespace fs = std::filesystem;
-
+bool pasirinkimas(Konteineriai& container, int choice);
 int main()
 {
 
 	srand(time(0));
-	vector<Mokinys> Grupe;
-	Mokinys mokinys;
-	vector<int> skaiciai;
+	Konteineriai konteineris;
 	int choice;
-	//2 kategorijos
-	vector<Mokinys>geri_mokiniai;
-	vector<Mokinys>vidutiniai_mokiniai;
 
-	//listas-------------------------
-	list<Mokinys> Grupe1;
-	list<Mokinys>geri_mokiniai1;
-	list<Mokinys>vidutiniai_mokiniai1;
-	Mokinys mokinys1;
-	//------------------------------------
-	
-	
-	
    // failo_generavimas(Grupe, mokinys);
 	while (true) {
-		cout << "Pasirinkite:" << endl;
-		cout<<"Skaitymas is failo[ 1 ] | Ivesti rankiniu budu[ 2 ] | Saraso generavimas [ 3 ]"  << endl;
+			cout << "Pasirinkite:" << endl;
+			cout<<"Skaitymas is failo[ 1 ] | Ivesti rankiniu budu[ 2 ] | Saraso generavimas [ 3 ]"  << endl;
 
-	cin >> choice;
-	if (cin.fail() || choice>3) {
-		cin.clear();
-		cin.ignore(100, '\n');
-		cout << "Neteisinga ivestis"<<endl;
-	}
-	else if(choice == 3) {
-		failo_generavimas();
-	}
-	else {
-		break;
-	}
-
-	}
-	
-
-if (choice == 1) {
-	while (true) {
-	cout << "Kuri faila skaitome?" << endl;
-	cout << "sarasas1000 [ 1 ] | sarasas10000 [ 2 ] | sarasas100000 [ 3 ] " << endl;
 		cin >> choice;
-		if (cin.fail() || choice > 3 || choice <1) {
-			cin.clear();
-			cin.ignore(100, '\n');
-			cout << "Neteisinga ivestis" << endl;
-
+		if (cin.fail() || choice>3) {
+			cin.clear(); cin.ignore(100, '\n'); cout << "Neteisinga ivestis"<<endl;	
+		}
+		else if(choice == 3) {
+			failo_generavimas();
 		}
 		else {
-		failo_skaitymas(Grupe,mokinys,choice);
 			break;
 		}
-		
 	}
+	
+	system("cls");
+if (choice == 1) {
 	while (true) {
-		cout << "Pasirinkite veiksmus" << endl;
-		cout << "Sarasu rikiavimas [ 1 ] | Sarasu skirstymas [ 2 ] | Saraso spausdinimas [ 3 ] ataskaitos sukurimas [ 4 ]  Exit [ 5 ]" << endl;
+		cout << "Kuri konteineri renkates: Vector[ 1 ] ; List[ 2 ]" << endl;
+		cin >> konteineris.container_type;
+		system("cls");
+	cout << "Kuri faila skaitome?" << endl; cout << "sarasas10000 [ 1 ] | sarasas100000 [ 2 ] | sarasas1000000 [ 3 ] " << endl;
+	
 		cin >> choice;
-		if (cin.fail() || choice > 5 || choice < 1) {
-			cin.clear();
-			cin.ignore(100, '\n');
-			cout << "Neteisinga ivestis" << endl;
-
+system("cls");
+		if (cin.fail() || choice > 3 || choice <1) {
+			cin.clear(); cin.ignore(100, '\n'); cout << "Neteisinga ivestis" << endl;			
 		}
-		else if(choice == 5) {
-
-			//cia reik perduoti visus konteinerius 
-			
+		else {
+			failo_skaitymas_new(konteineris, choice, konteineris.container_type);
 			break;
+		}		
+	}
+	
+	while (true) {
+		if (pasirinkimas(konteineris, choice) == false)break;
+	}
+
+	}
+//Rankinio budo realizavimas-------------
+	else if (choice = 2) {		
+		konteineris.container_type = 1;
+		int temp;
+		cout << "Iveskite pazimiu kieki?";
+		cin >> temp;
+		for (int i = 0; i < 2; i++) {	
+				asmens_ivestis(konteineris.mokinys); pazymiai(konteineris.mokinys,temp);
+				konteineris.Grupe.push_back(konteineris.mokinys); konteineris.mokinys.~Mokinys();
 		}
-		Pagrindiniai_veiksmai(Grupe,geri_mokiniai,vidutiniai_mokiniai, choice);
 
-	}
-
-
-	}
-	else if (choice = 2) {
-
-for (int i = 0; i < 2; i++) {	
+		while (true) {
+			if (pasirinkimas(konteineris, choice) == false)break;
+		}
 		
-		asmens_ivestis(mokinys);
-		pazymiai(mokinys);
+	}
 
-		Grupe.push_back(mokinys);
-		mokinys.~Mokinys();
-		}
-	/* analogas C# foreach(var variable in Objekt);
+konteineris.~Konteineriai();
+return EXIT_SUCCESS;
+}
 
-	cia galim realizuoti operacijas
-	1 vidurkiai , 2 visi namu darbai su egzu;*/
-all_print(Grupe);
+//meniu funkcija---------------------------------------------
+bool pasirinkimas(Konteineriai& container, int choice) {
+	cout << "Pasirinkite veiksmus" << endl;
+	cout << "Sarasu rikiavimas [ 1 ] | Sarasu skirstymas [ 2 ] | Saraso spausdinimas [ 3 ] ataskaitos sukurimas [ 4 ]  Exit [ 5 ]" << endl;
+	cin >> choice;
+	if (cin.fail() || choice > 5 || choice < 1) {
+		cin.clear();
+		cin.ignore(100, '\n');
+		cout << "Neteisinga ivestis" << endl;
 
 	}
-		else if(choice ==3){
-		failo_generavimas();
+	else if (choice == 5) {
+
+		//cia reik perduoti visus konteinerius 
+
+		return false;
+	}
+	Pagrindiniai_veiksmai_new(container, choice);
 
 
-
-
-		}
-
-
-
-
-
-	
-	
-
-
-	
-}
+	return true;
+ }
 
 	
