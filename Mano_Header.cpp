@@ -1,25 +1,29 @@
 #include "Mano_Header.h"
 
-
-
 Mokinys::Mokinys() {
 
-
-
-
 }
-//pildymo konstruktorius
+//pildymo konstruktoriai
 Mokinys::Mokinys(string name , string surname , vector<int> grades , int result) {
 	vardas = name;
 	pavarde = surname;
 	pazymiai = grades;
 	egzam_result = result;
-	//cout << "Sukurtas pildymas" << endl;
-	
+		
 }
 
+Mokinys::Mokinys(string name, string surname, vector<int> grades, int result,int paz_skaicius) {
+	vardas = name;
+	pavarde = surname;
+	pazymiai = grades;
+	egzam_result = result;
+	pazimiu_sk = paz_skaicius - 2;
+	pazymio_vidurkis(true);
+	
+}
+//-------------------------------------------------------------------------------------------------
 
-//operatorius priskiriantis reiksmes
+// kopijavimo operatorius priskiriantis reiksmes
 Mokinys& Mokinys::operator=(const Mokinys &mokinys) {
 	if (this == &mokinys)return *this;
 	vardas = mokinys.vardas;
@@ -39,65 +43,10 @@ Mokinys::~Mokinys() {
 
 
 }
-
-
-	
-//Metodai-------------------------------------
-float Mokinys::pazymio_vidurkis(bool priskyrimas) {
-
-	float vidurkis = std::accumulate(Mokinys::pazymiai.begin(), Mokinys::pazymiai.end(), 0);
-	vidurkis /= Mokinys::pazymiai.size();
-	if (priskyrimas==true)  SetVidurkis(vidurkis); 
-
-
-
-	return vidurkis;
-}
-
-
-
-
-float Mokinys::pazymio_medianas() {
-	float medianas;
-	std::sort(pazymiai.begin(), pazymiai.end());
-
-	if (pazymiai.size() % 2 == 1) {
-		// Nelyginis skaičius elementų, medianą gauname tiesiog vidurinio elemento reikšmė
-		medianas = pazymiai[pazymiai.size() / 2];
-	}
-	else {
-		// Lyginis skaičius elementų, medianą gauname dviejų vidurinių elementų vidurkį
-		int vidurinis1 = pazymiai[(pazymiai.size() - 1) / 2];
-		int vidurinis2 = pazymiai[pazymiai.size() / 2];
-		medianas = (vidurinis1 + vidurinis2) / 2.0; // Dėl tikslumo paversime į double
-	}
-	return medianas;
-}
-
-void Mokinys::print_vidurkis() {
-	cout << std::setw(12) << vardas << std::setw(12) << pavarde;
-	cout << std::setw(16) << pazymio_vidurkis(false) << endl;
-
-}
-
-void Mokinys::print_medianas() {
-	cout << std::setw(12) << vardas << std::setw(12) << pavarde;
-	cout << std::setw(16) << pazymio_medianas() << endl;
-
-
-
-}
-
-void Mokinys::print_ND() {
-	cout << std::setw(12)<<vardas<< std::setw(12)<< pavarde;
-	for (auto& skaicius : pazymiai) cout <<std::setw(11)<< skaicius;
-	cout <<std::setw(12)<<egzam_result<< endl;	
-}
-
 //-----------------------------------------------------------------
 
 
-//seteriai
+//SETERIAI
 void Mokinys::SetVardas(string name) {
 	vardas = name;
 
@@ -130,210 +79,196 @@ void Mokinys::SetVidurkis(float average) {
 
 //-------------------------
 //geteriai-------------------
-
-
-//Funkcijos--------------------------------------------
-void asmens_ivestis(Mokinys& student) {
-	string temp;
-	char temp_1;
-	cout << "Iveskite varda: ";
-	cin >> temp;
-	student.SetVardas(temp);
-	cout << "Iveskite pavarde: ";
-	cin >> temp;
-	student.SetPavarde(temp);
-
+int Mokinys::Get_pazSk() {
+	return pazimiu_sk;
+}
+string Mokinys::Get_Vardas() {
+	return vardas;
+}
+string Mokinys::Get_Pavarde() {
+	return pavarde;
+}
+int Mokinys::Get_Egzaminas() {
+	return egzam_result;
+}
+vector<int>Mokinys::Get_Pazymiai() {
+	return pazymiai;
 }
 
-void failo_skaitymas(vector<Mokinys>& group, Mokinys& student, int n) {
-	auto start = std::chrono::high_resolution_clock::now();auto st = start;
+float Mokinys::Get_Vidurkis() {
+
+	return pazymiu_vidurkis;
+}
+
+
+//METODAI-------------------------------------
+//Metodas kuris gali isvesti vidurki pre priskyrimo jei false, true priskiria;
+float Mokinys::pazymio_vidurkis(bool priskyrimas) {
+
+	float vidurkis = std::accumulate(Mokinys::pazymiai.begin(), Mokinys::pazymiai.end(), 0);
+	vidurkis /= Mokinys::pazymiai.size();
+	if (priskyrimas == true) {
+		SetVidurkis(vidurkis);
+	}
+
+
+
+	return vidurkis;
+}
+//mediano apskaiciavimo metodas
+float Mokinys::pazymio_medianas() {
+	float medianas;
+	std::sort(pazymiai.begin(), pazymiai.end());
+
+	if (pazymiai.size() % 2 == 1) {
+		medianas = pazymiai[pazymiai.size() / 2];
+	}
+	else {
+
+		int vidurinis1 = pazymiai[(pazymiai.size() - 1) / 2];
+		int vidurinis2 = pazymiai[pazymiai.size() / 2];
+		medianas = (vidurinis1 + vidurinis2) / 2.0; // 
+	}
+	return medianas;
+}
+/////////////////////////////////////////////////////////////////
+
+//Funkcijos--------------------------------------------
+//FAILO SKAITYMO FUNKCIJA-----------------------------------------------------
+
+
+void failo_skaitymas_buffer(Konteineriai& container, int n, int container_type) {
+	auto start = std::chrono::high_resolution_clock::now(); auto st = start;
+	string path = "sarasas/Kursiokai" + std::to_string(n) + ".txt";
+	std::ifstream skaitymas(path);
+	int skaic;
+	std::string zodis = ""; std::string vardas; std::string pavarde;
+	vector <int> temp_pazymiai;
+	skaitymas.seekg(0, std::ios::end);
+
+	std::streampos dydis = skaitymas.tellg();
+
+	skaitymas.seekg(0, std::ios::beg);
+
+	std::vector<char> buferis(dydis);
+
+	skaitymas.read(buferis.data(), dydis);
+	skaitymas.close(); // Uždarome failą
+
+	//std::istringstream iss(std::string(buferis.data(), dydis));
+	
+	//cout << buferis.data();
+	std::string eilute(buferis.begin(), buferis.end());
+	//cout << eilute << endl;
+	std::istringstream iss(eilute);
+	string eile;
+
+int nd1=0, nd2=0, nd3=0, nd4, nd5, nd6, nd7, nd8;
+	std::getline(iss, eile);
+
+	
+	while (iss >> vardas >> pavarde >> nd1 >> nd2 >> nd3 >> nd4 >> nd5 >> nd6>>nd7>>nd8) {
+	//	cout << vardas << pavarde << nd1 << nd2 << nd3 << nd4 << nd5 << nd6 << nd7 << nd8 << "dsd"<<endl;
+		vector <int> temp_pazymiai = { nd1, nd2, nd3, nd4, nd5,nd6, nd7 };
+		Mokinys mokinys(vardas,pavarde,temp_pazymiai,nd8,6);
+			
+		container.Grupe.push_back(mokinys);
+
+	}
+
+
+	auto end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> diff = end - start;
+	cout << "///////////////ATLIKIMO GREITIS//////////////////" << endl;
+	cout << "nuskaityta per: " << diff.count() << endl;
+	cout << "//////////////////////////////////////////////////" << endl;
+
+}
+//Pag failo skaitymas-veikaintis
+void failo_skaitymas_new(Konteineriai& container, int n,int container_type) {
+	auto start = std::chrono::high_resolution_clock::now(); auto st = start;
 	string path = "sarasas/Kursiokai" + std::to_string(n) + ".txt";
 	std::ifstream skaitymas(path);
 	int index = 0;
 	int skaiciavimas = -1;
 	int dis = 2;
 	int skaic;
-	std::string zodis="";
-	std::string vardas;
-	std::string pavarde;
+	std::string zodis = ""; std::string vardas; std::string pavarde;
 
 	vector <int> temp_pazymiai;
-	
+
 	if (skaitymas.is_open()) {
-	
+
 		//nuskaito pirma eilute iki egz. kad suzinoti kiek namu darbu
-		while (skaitymas >> zodis  ) {
+		while (skaitymas >> zodis) {
 			//cout << zodis << endl;
 			skaiciavimas += 1;
 			if (zodis == "egz.") { break; }
-	
+			//if (skaiciavimas > 20) { system("cls"), cout << "Failas neteisingas" << endl; exit; }
 
 		}
-		
-	
-		
-
-		cout << "Faile yra " << skaiciavimas-2 <<"namu darbu"<<endl;
+		cout << "Faile yra " << skaiciavimas - 2 << "namu darbu" << endl;
 
 
 		cout << "---------------------------" << endl;
+		skaitymas.ignore();
 		//cia realizuotas duomenu perdavimas i kintamuosius----------------------------------
-		while (!skaitymas.eof()) {
-			//cia nuskaito pavarde
-				if (index <1) { skaitymas >> zodis,pavarde=zodis, index += 1; }
-
-				//cia varda
-			if (index >=1 && index<2) { skaitymas >> zodis, vardas=zodis, index += 1; }
 	
+		while (!skaitymas.eof()) {	
+		
+			//cia nuskaito pavarde
+			if (index < 1) { skaitymas >> zodis, pavarde = zodis, index += 1; }
+			//cia varda
+			if (index >= 1 && index < 2) { skaitymas >> zodis, vardas = zodis, index += 1; }
 			//cia namu darbai
-			if (index == 2 && dis!=skaiciavimas) { skaitymas >> skaic, temp_pazymiai.push_back(skaic), dis += 1; }
+			if (index == 2 && dis != skaiciavimas) { skaitymas >> skaic, temp_pazymiai.push_back(skaic), dis += 1; }
 
-			
 			//cia inicializuojame perdavima i studenta ir i vectoriu Grupe
-			if (dis == skaiciavimas) { 
+			if (dis == skaiciavimas) {
 				skaitymas >> skaic;
 				//	Mokinys studentas(vardas,pavarde,temp_pazymiai,skaic);
-				student.SetVardas(vardas);
-				student.SetPavarde(pavarde);
-					student.SetEgzaminas(skaic),
-					student.SetPazymiai(temp_pazymiai),
-					student.SetPaz_sk(skaiciavimas-2),
-					group.push_back(student),
-					student.~Mokinys(),
-					temp_pazymiai.clear();
-					index = 0,
-					dis = 2; }
+
+			//	Mokinys mok(vardas, pavarde, temp_pazymiai, skaic, skaiciavimas);
+				container.mokinys.SetVardas(vardas);
+				container.mokinys.SetPavarde(pavarde);
+				container.mokinys.SetPazymiai(temp_pazymiai);
+				container.mokinys.SetEgzaminas(skaic);
+				container.mokinys.SetPaz_sk(skaiciavimas);
+				container.mokinys.pazymio_vidurkis(true);
+				temp_pazymiai.clear();
+				switch (container.container_type)
+				{
+				case 1:		
+
+					container.Grupe.push_back(container.mokinys),
+						container.mokinys.~Mokinys(),
+					
+					index = 0;dis = 2;				
+					break;
+				case 2:				
+						container.Grupe1.push_back(container.mokinys),
+							container.mokinys.~Mokinys(),					
+						
+					index = 0,dis = 2;					
+					break;				
+				default:
+					break;
+				}
+				index = 0, dis = 2;				
+			}
 
 		}
-		
 		skaitymas.close();
 		auto end = std::chrono::high_resolution_clock::now();
 		std::chrono::duration<double> diff = end - start;
 		cout << "///////////////ATLIKIMO GREITIS//////////////////" << endl;
-		cout << "nuskaityta per: " << diff.count()<<endl;
+		cout << "nuskaityta per: " << diff.count() << endl;
 		cout << "//////////////////////////////////////////////////" << endl;
-
-	
 	}
 	else {
 		cout << "Failo negalima atidaryti arba jo nera" << endl;
-		
-	
-		
-
-
 	}
-
-
-
-
 }
-
-
-void failo_skaitymas_v2(vector<Mokinys>& group, Mokinys& student) {
-	auto start = std::chrono::high_resolution_clock::now(); auto st = start;
-	std::ifstream input("kursiokai.txt"); // Atidaryti failą skaitymui
-
-	if (!input.is_open()) {
-		std::cerr << "Nepavyko atidaryti failo kursiokai.txt" << std::endl;
-		return; // Grįžti, jei nepavyko atidaryti failo
-	}
-
-	std::string line;
-
-	while (std::getline(input, line)) {
-		std::istringstream iss(line);
-		std::string vardas, pavarde;
-		iss >> vardas >> pavarde;
-
-		std::vector<int> pazymiai;
-		int pazymys;
-		while (iss >> pazymys) {
-			pazymiai.push_back(pazymys);
-		}
-
-		// Sukurti objektą Mokinys ir įdėti jį į vektorių
-			student.SetEgzaminas(pazymiai.back()),
-				pazymiai.pop_back(),
-			student.SetPazymiai(pazymiai),		
-			group.push_back(student),
-		
-		group.push_back(student);
-			student.~Mokinys(),
-			pazymiai.clear();	
-	}
-
-	input.close(); // Uždaryti failą
-	auto end = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> diff = end - start;
-	cout << "nuskaityta per " << diff.count() << endl;
-
-
-
-
-
-}
-
-
-
-
-
-
-
-
-
-void pazymiai(Mokinys& student) {
-	int temp;
-	vector<int> temp_pazymiai;
-	cout << "Iveskite pazimiu kieki?";
-	cin >> temp;
-	student.SetPaz_sk(temp);
-	for (int i = 0; i < temp; i++) {
-		short int temp2;
-		cout << "Iveskite pazymi";
-		cin >> temp2;
-		temp_pazymiai.push_back(temp2);
-
-
-
-	}
-
-	cout << "Iveskite egzamino rezultata ";
-	cin >> temp;
-	student.SetEgzaminas(temp);
-	student.SetPazymiai(temp_pazymiai);
-	cout << endl;
-}
-
-
-//spausdina pagrindini vidurkio-med uzrasa LENTELE---------------------
-void label_vidurkio(vector<Mokinys>& group) {
-	int choice;
-	cout << "Vidurkis[ 1.] , Medianas[ 2.] ";
-	cin >> choice;
-
-
-	if (choice == 1) {
-
-
-		cout << std::setw(12) << "Vardas" << std::setw(12) << "Pavarde";
-		cout << std::setw(25) << " Galutinis vidurkis " << endl;
-		cout << "---------------------------------------------------------------------------" << endl;
-		for (auto& duom : group) duom.print_vidurkis();
-
-
-	}
-	else {
-		cout << std::setw(12) << "Vardas" << std::setw(12) << "Pavarde";
-		cout << std::setw(25) << "Galutinis medianas " << endl;
-		cout << "---------------------------------------------------------------------------" << endl;
-		for (auto& duom : group)duom.print_medianas();
-
-	}
-
-}
-
-
 
 //------------------------------------------------------------------------
 //visu namu darbu lenteles spausdinimas
@@ -343,99 +278,9 @@ void label_ND(int group_size) {
 	for (int i = 0; i < group_size; i++) {
 		cout << std::setw(11) << "ND" << i + 1;
 
-
 	}
 	cout << std::setw(12) << "Egzaminas" << endl;
 	cout << endl;
 }
 
 
-
-
-void Mokinys::pazymiai_itext(std::ofstream& skaitymas) {
-
-	skaitymas << std::setw(15) << Get_Vardas() << std::setw(15) << Get_Pavarde() << std::setw(5);
-
-	for (int l = 0; l < pazymiai.size(); l++) {
-
-
-		skaitymas << std::setw(12) << pazymiai[l];
-	}
-
-	skaitymas << std::setw(12) << egzam_result << endl;
-
-
-
-
-
-
-}
-
-
-
-
-
-
-//----------------------------------------
-// 
-//
-//cia pagrindine spausdinimo funkcija kuri marsrutizuoja konkrecia uzklausa
-void all_print(vector<Mokinys>& group) {
-	
-	int pasirinkimas;
-	cout << "Vidurkis[ 1.] , visi namu darbai[ 2.]" << endl;
-	cout << "Ka isvesti: ";
-	cin >> pasirinkimas;
-
-
-	if (1 == pasirinkimas) {
-
-		label_vidurkio(group);
-
-
-
-	}
-	else {
-				
-		for (auto& duom : group) label_ND(duom.Get_pazSk()), duom.print_ND();
-
-
-
-	}
-
-
-}
-void all_print_v2(vector<Mokinys>& group) {
-	if (group.size()==0) {
-		cout << "sarasas tuscias" << endl;
-		return;
-	}
-	else {
-		cout << "KIEKIS: " << group.size() << endl;
-	}
-
-	int pasirinkimas;
-	cout << "Vidurkis[ 1.] , visi namu darbai[ 2.]" << endl;
-	cout << "Ka isvesti: ";
-	cin >> pasirinkimas;
-
-
-
-
-	if (1 == pasirinkimas) {
-
-		label_vidurkio(group);
-
-
-
-	}
-	else {
-		label_ND(group[0].Get_pazSk());
-		for (auto& duom : group) duom.print_ND();
-
-
-
-	}
-
-
-}
